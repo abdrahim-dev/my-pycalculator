@@ -128,3 +128,17 @@ def test_press_number_prevents_multiple_points(calculator):
     calculator.press_number(".")
     calculator.press_number(".")  # should be ignored
     assert calculator.current_input == "1."  # still only one decimal point
+
+def test_press_minus_first_number(calculator):
+    calculator.press_operator("-")  # Start with a minus operator
+    calculator.press_number("3")
+    calculator.press_equals()
+    assert calculator.result == -3.0
+
+def test_minus_operations_with_negative_numbers(calculator):
+    calculator.press_operator("-")  # Start with a minus operator
+    calculator.press_number("3")
+    calculator.press_operator("-")  # Subtracting a negative number
+    calculator.press_number("2")
+    calculator.press_equals()
+    assert calculator.result == -5.0

@@ -57,6 +57,33 @@ def test_press_equals_with_pending_operator_no_second_number(calculator):
     calculator.press_equals()
     assert calculator.result == 9.0              # now it resolves correctly
 
+
+def test_backspace_functionality(calculator):
+    calculator.press_number(123)
+    calculator.backspace()  # Remove the last digit (3)
+    assert calculator.current_input == "12"
+
+    calculator.backspace()  # Remove the last digit (2)
+    assert calculator.current_input == "1"
+
+    calculator.backspace()  # Remove the last digit (1)
+    assert calculator.current_input == ""  # Should be empty now
+
+    calculator.backspace()  # Backspace on empty input should do nothing
+    assert calculator.current_input == ""  # Still empty
+
+
+def test_backspace_does_not_touch_pending_operator(calculator):
+    calculator.press_number(5)
+    calculator.press_operator("+")
+    # current_input is now "" (cleared by press_operator), current_operator is "+"
+    calculator.backspace()
+    
+    assert calculator.current_operator == "+"  # untouched
+    assert calculator.result == 5.0             # untouched
+    assert calculator.current_input == ""        # still empty, no crash
+    
+
 def test_division_by_zero(calculator):
     calculator.press_number(10)
     calculator.press_operator("/")
@@ -80,3 +107,24 @@ def test_not_allowed_value(calculator):
 
     with pytest.raises(ValueError, match="Invalid input. Please enter a valid number."):
         calculator.press_equals()
+
+
+def test_press_number_allows_single_decimal_point(calculator):
+    calculator.press_number("1")
+    calculator.press_number(".")
+    calculator.press_number("5")
+    assert calculator.current_input == "1.5"
+
+
+def test_press_number_prevents_multiple_decimal_points(calculator):
+    calculator.press_number("1")
+    calculator.press_number(".")
+    calculator.press_number("5")
+    calculator.press_number(".")  # should be ignored
+    assert calculator.current_input == "1.5"
+
+def test_press_number_prevents_multiple_points(calculator):
+    calculator.press_number("1")
+    calculator.press_number(".")
+    calculator.press_number(".")  # should be ignored
+    assert calculator.current_input == "1."  # still only one decimal point

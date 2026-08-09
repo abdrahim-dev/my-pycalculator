@@ -8,7 +8,9 @@ class Calculator:
         self.result = 0.0  # The result of the calculation
 
     def press_number(self, number: float) -> None:
-        self.current_input += str(number)  # Append the pressed number to the current input
+        if "." in self.current_input and str(number) == ".":
+            return                          # Prevent multiple decimal points in the current input
+        self.current_input += str(number)   # Append the pressed number to the current input
 
     def press_operator(self, operator: str) -> None:
         if self.current_input: # If there's a current input, apply the previous operator (if any) to the result and the current input
@@ -53,6 +55,9 @@ class Calculator:
             if self.current_input:
                 self.result = float(self.current_input)
                 self.current_input = ""
+
+    def backspace(self) -> None:
+        self.current_input = self.current_input[:-1]  # Remove the last character from the current input
             
     def clear(self) -> None:
         self.current_input = ""
@@ -70,6 +75,7 @@ if __name__ == "__main__":
     calc.press_operator("*")   
     calc.press_number(5)
     calc.press_operator("+")   
-    calc.press_number(10)
+    calc.backspace()  # Remove the last operator (+)
+    calc.press_number(0.25)
     calc.press_equals()
-    print(calc.result)         
+    print(calc.result)      

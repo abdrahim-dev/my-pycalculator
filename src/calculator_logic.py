@@ -73,6 +73,21 @@ class Calculator:
         else:
             self.result = -self.result  # Toggle the sign of the result if there's no current input
 
+    def format_value(self, value: float) -> str:
+        if value.is_integer():
+            return str(int(value))
+        return str(value)
+
+    def percentage(self) -> None:
+        if self.current_input:
+            try:
+                value = float(self.current_input)
+            except ValueError:
+                raise ValueError("Invalid input. Please enter a valid number.")
+            self.current_input = self.format_value(value / 100)
+        else:
+            self.result /= 100
+
 if __name__ == "__main__":
     
     calc = Calculator()

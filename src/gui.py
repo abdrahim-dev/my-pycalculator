@@ -45,6 +45,8 @@ class CalculatorGuiApp(ctk.CTk):
 
         toggle_sign_button = ctk.CTkButton(self, width=50, height=50, font=ctk.CTkFont(size=16, weight="bold"), corner_radius=15, fg_color=self._get_button_color("+/-"), text="+/-", command=lambda: self.on_button_click("+/-"))
 
+        percentage_button = ctk.CTkButton(self, width=50, height=50, font=ctk.CTkFont(size=16, weight="bold"), corner_radius=15, fg_color=self._get_button_color("%"), text="%", command=lambda: self.on_button_click("%"))
+
         # Create a display entry widget for the calculator
         self.display = ctk.CTkEntry(self, justify="right", font=ctk.CTkFont(size=32, weight="bold"), corner_radius=10)
 
@@ -53,7 +55,7 @@ class CalculatorGuiApp(ctk.CTk):
         backspace_button.grid(row=5, column=1, padx=5, pady=5, sticky="nsew")
         light_dark_button.grid(row=0, column=4, padx=5, pady=5, sticky="nsew")
         toggle_sign_button.grid(row=5, column=2, padx=5, pady=5, sticky="nsew")
-
+        percentage_button.grid(row=5, column=3, padx=5, pady=5, sticky="nsew")
         # create a grid layout for the display at the top of the window
         self.display.grid(row=0, column=0, columnspan=4, padx=5, pady=5, sticky="nsew") 
 
@@ -96,10 +98,12 @@ class CalculatorGuiApp(ctk.CTk):
             self.calculator.backspace()
         elif button_text == "+/-":                                               # Call the toggle_sign method to change the sign of the current input or result
             self.calculator.toggle_sign()
+        elif button_text == "%":                                                 # Call the percentage method to convert the current input or result to a percentage
+            self.calculator.percentage()
         self._update_display()                                                   # runs no matter which branch executed
 
     def _get_button_color(self, button_text: str) -> tuple: # returns a tuple of (light_mode_color, dark_mode_color) based on the button type
-        if button_text in self.OPERATOR_SYMBOLS:
+        if button_text in self.OPERATOR_SYMBOLS or button_text in ["+/-", "%"]:
             return self.COLOR_OPERATOR
         elif button_text.isdigit() or button_text == ".":
             return self.COLOR_DIGIT
@@ -107,8 +111,6 @@ class CalculatorGuiApp(ctk.CTk):
             return self.COLOR_ACTION  
         elif button_text == "=":
             return self.COLOR_EQUAL
-        elif button_text == "+/-":
-            return self.COLOR_OPERATOR
         else:
             return self.COLOR_MODE 
 
@@ -120,19 +122,13 @@ class CalculatorGuiApp(ctk.CTk):
             new_mode = "Light"
         ctk.set_appearance_mode(new_mode)
 
-    def _format_number(self, value: float) -> str: # Format the number to remove unnecessary decimal points and trailing zeros
-        if value.is_integer():
-            return str(int(value))
-        else:
-            return str(value)
-
     def _update_display(self) -> None:                                           # Update the display with the current input or results
         if self.calculator.current_input:
             self.display.delete(0, ctk.END)                                      # Clear the display
             self.display.insert(0, self.calculator.current_input)                # Update the display with the current input
         else:
             self.display.delete(0, ctk.END)                                      # Clear the display
-            self.display.insert(0, self._format_number(self.calculator.result))  # Update the display with the formatted result
+            self.display.insert(0, self.calculator.format_value(self.calculator.result))  # Update the display with the formatted result
 
 if __name__ == "__main__":       
     app = CalculatorGuiApp()

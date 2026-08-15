@@ -177,3 +177,30 @@ def test_toggle_sign_on_result_negative(calculator):
 def test_toggle_sign_on_empty_input(calculator):
     calculator.toggle_sign()
     assert calculator.result == 0.0  # No change, still zero
+
+def test_percentage_on_current_input(calculator):
+    calculator.press_number("75")
+    calculator.percentage()
+    assert calculator.current_input == "0.75"
+
+def test_percentage_on_result(calculator):
+    calculator.press_number("50")
+    calculator.press_operator("+")
+    calculator.press_number("50")
+    calculator.press_equals()  # result is now 100.0
+    calculator.percentage()
+    assert calculator.result == 1.0  # 100% becomes 1.0
+
+def test_percentage_on_empty_input(calculator):
+    calculator.percentage()
+    assert calculator.result == 0.0  # No change, still zero
+
+def test_percentage_on_negative_input(calculator):
+    calculator.press_number("-45")
+    calculator.percentage()
+    assert calculator.current_input == "-0.45"
+
+def test_percentage_on_invalid_input(calculator):
+    calculator.press_number("abc")  # Invalid input
+    with pytest.raises(ValueError, match="Invalid input. Please enter a valid number."):
+        calculator.percentage()

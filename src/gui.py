@@ -43,15 +43,17 @@ class CalculatorGuiApp(ctk.CTk):
 
         light_dark_button = ctk.CTkButton(self, width=20, height=20, font=ctk.CTkFont(size=12, weight="normal"), corner_radius=10, fg_color=self._get_button_color("☾☀︎"), text="☾☀︎", command=lambda: self.change_appearance_mode())
 
+        toggle_sign_button = ctk.CTkButton(self, width=50, height=50, font=ctk.CTkFont(size=16, weight="bold"), corner_radius=15, fg_color=self._get_button_color("+/-"), text="+/-", command=lambda: self.on_button_click("+/-"))
+
         # Create a display entry widget for the calculator
         self.display = ctk.CTkEntry(self, justify="right", font=ctk.CTkFont(size=32, weight="bold"), corner_radius=10)
 
         # create a grid layout for the buttons below the display
         clear_button.grid(row=5, column=0, padx=5, pady=5, sticky="nsew")
-        # create a grid layout for the buttons below the display
         backspace_button.grid(row=5, column=1, padx=5, pady=5, sticky="nsew")
-        # create a grid layout for the buttons below the display
         light_dark_button.grid(row=0, column=4, padx=5, pady=5, sticky="nsew")
+        toggle_sign_button.grid(row=5, column=2, padx=5, pady=5, sticky="nsew")
+
         # create a grid layout for the display at the top of the window
         self.display.grid(row=0, column=0, columnspan=4, padx=5, pady=5, sticky="nsew") 
 
@@ -92,6 +94,8 @@ class CalculatorGuiApp(ctk.CTk):
             self.calculator.clear()
         elif button_text == "⌫":                                                 # Call the backspace method to remove the last character
             self.calculator.backspace()
+        elif button_text == "+/-":                                               # Call the toggle_sign method to change the sign of the current input or result
+            self.calculator.toggle_sign()
         self._update_display()                                                   # runs no matter which branch executed
 
     def _get_button_color(self, button_text: str) -> tuple: # returns a tuple of (light_mode_color, dark_mode_color) based on the button type
@@ -103,6 +107,8 @@ class CalculatorGuiApp(ctk.CTk):
             return self.COLOR_ACTION  
         elif button_text == "=":
             return self.COLOR_EQUAL
+        elif button_text == "+/-":
+            return self.COLOR_OPERATOR
         else:
             return self.COLOR_MODE 
 

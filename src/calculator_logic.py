@@ -64,6 +64,15 @@ class Calculator:
         self.current_operator = ""
         self.result = 0.0
 
+    def toggle_sign(self) -> None:
+        if self.current_input and self.current_input != "0":    # Only toggle sign if there's a current input and it's not zero
+            if self.current_input.startswith("-"):
+                self.current_input = self.current_input[1:]     # Remove the negative sign
+            else:
+                self.current_input = "-" + self.current_input   # Add the negative sign
+        else:
+            self.result = -self.result  # Toggle the sign of the result if there's no current input
+
 if __name__ == "__main__":
     
     calc = Calculator()

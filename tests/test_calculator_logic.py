@@ -142,3 +142,38 @@ def test_minus_operations_with_negative_numbers(calculator):
     calculator.press_number("2")
     calculator.press_equals()
     assert calculator.result == -5.0
+
+def test_toggle_sign_on_positive_number(calculator):
+    calculator.press_number("5")
+    calculator.toggle_sign()
+    assert calculator.current_input == "-5"
+
+def test_toggle_sign_on_negative_number(calculator):
+    calculator.press_number("-5")
+    calculator.toggle_sign()
+    assert calculator.current_input == "5"
+
+def test_toggle_sign_on_zero(calculator):
+    calculator.press_number("0")
+    calculator.toggle_sign()
+    assert calculator.current_input == "0"
+
+def test_toggle_sign_on_result(calculator):
+    calculator.press_number("10")
+    calculator.press_operator("+")
+    calculator.press_number("3")
+    calculator.press_equals()  # result is now 13.0
+    calculator.toggle_sign()
+    assert calculator.result == -13.0
+
+def test_toggle_sign_on_result_negative(calculator):
+    calculator.press_number("3")
+    calculator.press_operator("-")
+    calculator.press_number("13")
+    calculator.press_equals()  # result is now -10.0
+    calculator.toggle_sign()
+    assert calculator.result == 10.0
+
+def test_toggle_sign_on_empty_input(calculator):
+    calculator.toggle_sign()
+    assert calculator.result == 0.0  # No change, still zero
